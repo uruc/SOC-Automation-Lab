@@ -1,5 +1,7 @@
 # SOC Automation Project
 
+**Author: [Ibrahim Uruc Tarim](https://github.com/uruc)**
+
 ## Introduction
 
 ### Overview
