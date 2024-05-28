@@ -1,0 +1,2 @@
+# SOC-Automation-Project
+ This project demonstrates the automation of Security Operations Center (SOC) workflows using tools like Wazuh, Shuffle, and TheHive. The goal is to automate event collection, alerting, and incident response to enhance SOC efficiency and effectiveness. The project includes setting up a Windows 10 client with Sysmon, and Ubuntu 22.04 for Wazuh and TheHive, with deployments on either cloud or virtual machines.
