@@ -1,4 +1,4 @@
-# SOC Automation Project
+# SOC Automation Lab
 
 **Author: [Ibrahim Uruc Tarim](https://github.com/uruc)**
 
