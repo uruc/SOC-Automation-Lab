@@ -82,3 +82,44 @@ The SOC Automation Project aims to create an automated Security Operations Cente
    ![Verify Sysmon Installation](https://github.com/uruc/SOC-Automation-Lab/blob/main/images/Pasted%20image%2020240603154953.png)
 
 With this step, our Windows 10 machine with Sysmon is ready. The next step is setting up Wazuh.
+
+### Step 2: Set Up Wazuh Server
+
+To set up the Wazuh server, we will be using DigitalOcean cloud service. However, you can use any other cloud platform or virtual machines as well. We start by creating a droplet from the menu:
+
+![Create Droplet](https://github.com/uruc/SOC-Automation-Lab/blob/main/images/Pasted%20image%2020240603215218.png)
+
+We select Ubuntu 22.04 as our operating system:
+
+![Select Ubuntu](https://github.com/uruc/SOC-Automation-Lab/blob/main/images/Pasted%20image%2020240603220120.png)
+
+We use a root password and change the name to Wazuh, then create the droplet:
+
+![Create Wazuh Droplet](https://github.com/uruc/SOC-Automation-Lab/blob/main/images/Pasted%20image%2020240603220521.png)
+
+Next, we need to set up a firewall to prevent external scan spams:
+From Networking > Firewall > Create Firewall:
+
+![Create Firewall](https://github.com/uruc/SOC-Automation-Lab/blob/main/images/Pasted%20image%2020240603220742.png)
+
+We change the inbound rules to only allow our own IP:
+
+![Set Inbound Rules](https://github.com/uruc/SOC-Automation-Lab/blob/main/images/Pasted%20image%2020240603220920.png)
+
+After setting up the firewall, we apply it to our Wazuh server:
+
+![Apply Firewall](https://github.com/uruc/SOC-Automation-Lab/blob/main/images/Pasted%20image%2020240603221926.png)
+![Firewall Protection](https://github.com/uruc/SOC-Automation-Lab/blob/main/images/Pasted%20image%2020240603222113.png)
+
+Now our firewall is protecting our virtual machine.
+
+From the left side menu, we go to Droplets > Wazuh > Access > Launch Droplet Console. This allows us to connect to the server via SSH:
+
+![Launch Droplet Console](https://github.com/uruc/SOC-Automation-Lab/blob/main/images/Pasted%20image%2020240603223020.png)
+
+First, we update and upgrade the system:
+
+```bash
+sudo apt-get update && sudo apt-get upgrade
+```
+
