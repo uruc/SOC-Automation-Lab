@@ -1,13 +1,13 @@
 # SOC Automation Lab
 
-**Author: [Ibrahim Uruc Tarim](https://github.com/uruc)**
+**Author: [Uruc Tarim](https://github.com/uruc)**
 
 ## Introduction
 
 ### Overview
 The SOC Automation Project aims to create an automated Security Operations Center (SOC) workflow that streamlines event monitoring, alerting, and incident response. By leveraging tools such as Wazuh, Shuffle, and TheHive, this project will enhance the efficiency and effectiveness of SOC operations. The project involves setting up a Windows 10 client with Sysmon for event generation, Wazuh for event management and alerting, Shuffle for automation, and TheHive for case management and response actions.
 
-![SOC Automation Diagram](https://github.com/uruc/SOC-Automation-Project/blob/main/SOC_Automation_Diagram.png)
+![SOC Automation Diagram](https://github.com/uruc/SOC-Automation-Lab/blob/main/images/SOC_Automation_Diagram.png)
 
 ### Purpose and Goals
 - **Automate Event Collection and Analysis:** Ensure security events are collected and analyzed in real-time with minimal manual intervention.
@@ -31,6 +31,7 @@ The SOC Automation Project aims to create an automated Security Operations Cente
 - **Wazuh:** An open-source security monitoring platform that will serve as the central point for event collection, analysis, and alerting.
 - **Shuffle:** A security automation platform that will handle the workflow automation for alert processing and response actions.
 - **TheHive:** A scalable, open-source Security Incident Response Platform designed for SOCs to efficiently manage and resolve incidents.
+- **VirusTotal:** An online service that analyzes files and URLs to detect viruses, worms, trojans, and other kinds of malicious content.
 - **Cloud Services or Additional VMs:** Wazuh and TheHive can be deployed either on cloud infrastructure or additional virtual machines depending on your resources and preferences.
 
 ### Prior Knowledge
@@ -40,50 +41,28 @@ The SOC Automation Project aims to create an automated Security Operations Cente
 
 ## Setup
 
-### Step 1: Send Events from Windows 10 Client Wazuh Agent
-- Description of the process.
-- Configuration details.
-- Screenshots of the setup.
+### Step 1: Install and Configure Windows 10 with Sysmon
 
-## Detailed Steps
+1. **Install Windows 10 on VMware:**
+   ![Windows 10 Installation](https://github.com/uruc/SOC-Automation-Lab/blob/main/images/Pasted%20image%2020240603131110.png)
 
-### Step 2: Receive Events at Wazuh Manager
-- Description of how events are received.
-- Configuration details.
-- Screenshots.
+2. **Install Sysmon:**
+   ![Sysmon Installation](https://github.com/uruc/SOC-Automation-Lab/blob/main/images/Pasted%20image%2020240603131150.png)
 
-### Step 3: Send Alerts from Wazuh Manager to Shuffle
-- Description of alert sending.
-- Configuration details.
-- Screenshots.
+3. **Download Sysmon configuration files from [Sysmon Modular Config](https://github.com/olafhartong/sysmon-modular):**
+   ![Sysmon Modular Config](https://github.com/uruc/SOC-Automation-Lab/blob/main/images/Pasted%20image%2020240603131815.png)
+   ![Sysmon Modular Config Files](https://github.com/uruc/SOC-Automation-Lab/blob/main/images/Pasted%20image%2020240603132002.png)
 
-### Step 4: Enrich IOCs Using OSINT
-- Description of enrichment process.
-- Configuration details.
-- Screenshots.
+4. **Extract the Sysmon zip file and open PowerShell as an administrator. Navigate to the Sysmon directory extracted from the zip file:**
+   ![Extract Sysmon Zip](https://github.com/uruc/SOC-Automation-Lab/blob/main/images/Pasted%20image%2020240603133020.png)
 
-### Step 5: Send Alerts from Shuffle to TheHive
-- Description of the alert forwarding process.
-- Configuration details.
-- Screenshots.
+5. **Place the Sysmon configuration file into the Sysmon directory as well.**
 
-### Step 6: Send Email Notifications
-- Description of email notifications.
-- Configuration details.
-- Screenshots.
+6. **Before installing Sysmon, check if it is already installed on the Windows machine by verifying:**
+   - Services
+   - Event Viewer > Applications and Services Logs > Microsoft > Windows
 
-### Step 7: SOC Analyst Interactions with TheHive
-- Description of how SOC analysts interact with alerts.
-- Screenshots.
+   ![Check Sysmon Installation](https://github.com/uruc/SOC-Automation-Lab/blob/main/images/Pasted%20image%2020240603133433.png)
 
-### Step 8: Perform Response Actions
-- Description of response actions.
-- Configuration details.
-- Screenshots.
+7. **Since Sysmon is not installed, proceed with the installation using the command:**
 
-## Conclusion
-- Summary of the project.
-- Potential improvements or future work.
-
-## References
-- Any references or additional reading materials.
