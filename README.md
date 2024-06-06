@@ -72,9 +72,9 @@ The SOC Automation Project aims to create an automated Security Operations Cente
 
 **Since Sysmon is not installed, proceed with the installation using the command:**
 
-```PowerShell
+
 .\Sysmon64.exe -i .\sysmonconfig.xml
-```
+
    ![Install Sysmon](https://github.com/uruc/SOC-Automation-Lab/blob/main/images/Pasted%20image%2020240603154817.png)
 
 **After a short installation, verify that Sysmon is installed on the system:**
@@ -119,7 +119,6 @@ From the left side menu, we go to Droplets > Wazuh > Access > Launch Droplet Con
 
 First, we update and upgrade the system:
 
-```bash
 sudo apt-get update && sudo apt-get upgrade
-```
+
 
