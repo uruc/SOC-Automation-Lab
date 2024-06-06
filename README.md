@@ -7,7 +7,7 @@
 ### Overview
 The SOC Automation Project aims to create an automated Security Operations Center (SOC) workflow that streamlines event monitoring, alerting, and incident response. By leveraging tools such as Wazuh, Shuffle, and TheHive, this project will enhance the efficiency and effectiveness of SOC operations. The project involves setting up a Windows 10 client with Sysmon for event generation, Wazuh for event management and alerting, Shuffle for automation, and TheHive for case management and response actions.
 
-![SOC Automation Diagram](https://github.com/uruc/SOC-Automation-Lab/blob/main/images/SOC_Automation_Diagram.png)
+![SOC Automation Diagram](https://github.com/uruc/SOC-Automation-Lab/blob/main/SOC_Automation_Diagram.png)
 
 ### Purpose and Goals
 - **Automate Event Collection and Analysis:** Ensure security events are collected and analyzed in real-time with minimal manual intervention.
@@ -43,26 +43,42 @@ The SOC Automation Project aims to create an automated Security Operations Cente
 
 ### Step 1: Install and Configure Windows 10 with Sysmon
 
-1. **Install Windows 10 on VMware:**
+**Install Windows 10 on VMware:**
+ 
    ![Windows 10 Installation](https://github.com/uruc/SOC-Automation-Lab/blob/main/images/Pasted%20image%2020240603131110.png)
 
-2. **Install Sysmon:**
+
+**Download Sysmon:**
+
    ![Sysmon Installation](https://github.com/uruc/SOC-Automation-Lab/blob/main/images/Pasted%20image%2020240603131150.png)
 
-3. **Download Sysmon configuration files from [Sysmon Modular Config](https://github.com/olafhartong/sysmon-modular):**
+**Download Sysmon configuration files from [Sysmon Modular Config](https://github.com/olafhartong/sysmon-modular):**
+
    ![Sysmon Modular Config](https://github.com/uruc/SOC-Automation-Lab/blob/main/images/Pasted%20image%2020240603131815.png)
    ![Sysmon Modular Config Files](https://github.com/uruc/SOC-Automation-Lab/blob/main/images/Pasted%20image%2020240603132002.png)
 
-4. **Extract the Sysmon zip file and open PowerShell as an administrator. Navigate to the Sysmon directory extracted from the zip file:**
+**Extract the Sysmon zip file and open PowerShell as an administrator. Navigate to the Sysmon directory extracted from the zip file:**
+
    ![Extract Sysmon Zip](https://github.com/uruc/SOC-Automation-Lab/blob/main/images/Pasted%20image%2020240603133020.png)
 
-5. **Place the Sysmon configuration file into the Sysmon directory as well.**
+**Place the Sysmon configuration file into the Sysmon directory as well.**
 
-6. **Before installing Sysmon, check if it is already installed on the Windows machine by verifying:**
+**Before installing Sysmon, check if it is already installed on the Windows machine by verifying:**
+ 
    - Services
    - Event Viewer > Applications and Services Logs > Microsoft > Windows
 
    ![Check Sysmon Installation](https://github.com/uruc/SOC-Automation-Lab/blob/main/images/Pasted%20image%2020240603133433.png)
 
-7. **Since Sysmon is not installed, proceed with the installation using the command:**
+**Since Sysmon is not installed, proceed with the installation using the command:**
 
+```PowerShell
+.\Sysmon64.exe -i .\sysmonconfig.xml
+```
+   ![Install Sysmon](https://github.com/uruc/SOC-Automation-Lab/blob/main/images/Pasted%20image%2020240603154817.png)
+
+**After a short installation, verify that Sysmon is installed on the system:**
+
+   ![Verify Sysmon Installation](https://github.com/uruc/SOC-Automation-Lab/blob/main/images/Pasted%20image%2020240603154953.png)
+
+With this step, our Windows 10 machine with Sysmon is ready. The next step is setting up Wazuh.
