@@ -254,77 +254,77 @@ Remove the old Cassandra data files since we installed TheHive using the package
 ```
 rm -rf /var/lib/cassandra/*
 ```
-Now we can start the service again:
+Start the Cassandra service again:
 ```
 systemctl start cassandra.service
 ```
-We check the service just in case with:
+Check the Cassandra service status to ensure it's running:
 ```
 systemctl status cassandra.service
 ```
 
 ![Cassandra Service Status](https://github.com/uruc/SOC-Automation-Lab/blob/main/images/Pasted%20image%2020240603232813.png)
 
-The next step is to set up Elasticsearch, which will be used for data indexing.
+**3.4.2 Configure Elasticsearch:**
+Elasticsearch is used for data indexing in TheHive. We need to configure it by modifying the `elasticsearch.yml` file:
 ```
 nano /etc/elasticsearch/elasticsearch.yml
 ```
 
-Here, we can change the name of the cluster (optional).
-We need to uncomment the `node.name`.
-And third, we need to uncomment the `network.host` and change the IP to our TheHive's public IP.
+Optionally, change the cluster name.
+Uncomment the `node.name` field.
+Uncomment the `network.host` field and set the IP to TheHive's public IP.
 
 ![Elasticsearch Configuration](https://github.com/uruc/SOC-Automation-Lab/blob/main/images/Pasted%20image%2020240603233522.png)
 
-Additionally, we can uncomment the `http.port` as optional because the default port is 9200.
-And we can also optionally uncomment the `cluster.initial_master_nodes: ["node-1", "node-2"]` and remove `node-2` since we don't have it.
+Optionally, uncomment the `http.port` field (default port is 9200).
+Optionally, uncomment the `cluster.initial_master_nodes` field, remove `node-2` if not applicable.
 
-Now we can start the Elasticsearch service and then enable it:
+Start and enable the Elasticsearch service:
 ```
 systemctl start elasticsearch
 systemctl enable elasticsearch
 ```
 
-And checking the service:
+Check the Elasticsearch service status:
 ```
 systemctl status elasticsearch
 ```
 
 ![Elasticsearch Service Status](https://github.com/uruc/SOC-Automation-Lab/blob/main/images/Pasted%20image%2020240603233935.png)
 
-The next step is to start configuring TheHive.
-Before we configure TheHive's configuration file, we want to make sure that the `thehive` user and group have access to a certain file path.
+**3.4.3 Configure TheHive:**
+Before configuring TheHive, ensure the `thehive` user and group have access to the necessary file paths:
 ```
 ls -la /opt/thp
 ```
 
 ![TheHive Directory Permissions](https://github.com/uruc/SOC-Automation-Lab/blob/main/images/Pasted%20image%2020240603234256.png)
 
-We see there that `root` has access to the `thehive` directory, so we need to change that:
+If `root` has access to the `thehive` directory, change the ownership:
 ```
 chown -R thehive:thehive /opt/thp
 ```
-This essentially means to change the owner to the `thehive` user and group for the destination directories.
+This command changes the owner to the `thehive` user and group for the specified directories.
 
 ![Change TheHive Directory Permissions](https://github.com/uruc/SOC-Automation-Lab/blob/main/images/Pasted%20image%2020240603234450.png)
 
-Now we can configure TheHive's configuration file:
+Now, configure TheHive's configuration file:
 ```
 nano /etc/thehive/application.conf
 ```
 
-We go to the line `database` and `index config`.
-First, we change the `hostname` IP to our TheHive's public IP.
-Second, we change the `cluster.name` to the same as the Cassandra cluster name, which was "Test Cluster".
-Then, we change the `index.search.hostname` to our public IP as well.
-And at the bottom, we change the `application.baseUrl` to our public IP as well.
+Modify the `database` and `index config` sections.
+Change the `hostname` IP to TheHive's public IP.
+Set the `cluster.name` to the same value as the Cassandra cluster name ("Test Cluster" in this example).
+Change the `index.search.hostname` to TheHive's public IP.
+At the bottom, change the `application.baseUrl` to TheHive's public IP.
 
-By default, TheHive has both Cortex and MISP enabled.
-Cortex is their data enrichment and response capability, whereas MISP is used as their CTI platform.
+By default, TheHive has both Cortex (data enrichment and response) and MISP (threat intelligence platform) enabled.
 
 ![TheHive Configuration](https://github.com/uruc/SOC-Automation-Lab/blob/main/images/Pasted%20image%2020240603235441.png)
 
-We save this file and start and enable the service:
+Save the file, start, and enable the TheHive service:
 ```
 systemctl start thehive
 systemctl enable thehive
@@ -332,178 +332,186 @@ systemctl enable thehive
 
 ![TheHive Service Status](https://github.com/uruc/SOC-Automation-Lab/blob/main/images/Pasted%20image%2020240603235616.png)
 
-Important note: If you cannot access TheHive, make sure to check all 3 services: Cassandra, Elasticsearch, and TheHive. All of them should be running; otherwise, TheHive won't start.
+Important note: If you cannot access TheHive, ensure all three services (Cassandra, Elasticsearch, and TheHive) are running. If any of them are not running, TheHive won't start.
 
-If all services are running, we can connect to TheHive from the browser using the public IP of TheHive and port 9000:
+If all services are running, access TheHive from a web browser using TheHive's public IP and port 9000:
 ```
 http://143.198.56.201:9000/login
 ```
 
 ![TheHive Login](https://github.com/uruc/SOC-Automation-Lab/blob/main/images/Pasted%20image%2020240603235840.png)
 
-We can log in to TheHive using the default login, which is `admin@thehive.local`, and the password is `secret`.
+Log in to TheHive using the default credentials:
+Username: `admin@thehive.local`
+Password: `secret`
 
 ![TheHive Dashboard](https://github.com/uruc/SOC-Automation-Lab/blob/main/images/Pasted%20image%2020240604000101.png)
 
-Now that we have TheHive configured, we move on to Wazuh for configuration.
-We log in to the Wazuh dashboard.
+### 3.5 Step 5: Configure Wazuh
 
-Now we will add an agent to Wazuh.
-Click on "Add agent", select "Windows" since we have a Windows client.
-The next server address is our Wazuh public IP.
+**3.5.1 Add a Windows Agent in Wazuh:**
+Log in to the Wazuh web interface.
+Click on "Add agent" and select "Windows" as the agent's operating system.
+Set the server address to the Wazuh server's public IP.
 
 ![Add Wazuh Agent](https://github.com/uruc/SOC-Automation-Lab/blob/main/images/Pasted%20image%2020240604000526.png)
 
-Now we copy the command at the bottom and go to our Windows machine.
-Open PowerShell and paste it, and the installation will start.
+Copy the installation command provided and execute it in PowerShell on the Windows client machine. The Wazuh agent installation will start.
 
 ![Wazuh Agent Installation](https://github.com/uruc/SOC-Automation-Lab/blob/main/images/Pasted%20image%2020240604002346.png)
 
-After this, we start the service with the `net start wazuhsvc` command.
-We can also start it or control it from the Services.
+After the installation, start the Wazuh agent service using the `net start wazuhsvc` command or through Windows Services.
 
 ![Wazuh Agent Service](https://github.com/uruc/SOC-Automation-Lab/blob/main/images/Pasted%20image%2020240604002550.png)
 ![Wazuh Agent Service Start](https://github.com/uruc/SOC-Automation-Lab/blob/main/images/Pasted%20image%2020240604002624.png)
 
-Now we can go and check from the Wazuh dashboard to see the agent.
+**3.5.2 Verify the Wazuh Agent:**
+Check the Wazuh web interface to confirm the Windows agent is successfully connected.
 
 ![Wazuh Agent Connected](https://github.com/uruc/SOC-Automation-Lab/blob/main/images/Pasted%20image%2020240604002744.png)
 
-We see that our Windows agent is successfully checking into Wazuh.
+The Windows agent should be listed with an "Active" status.
 
 ![Wazuh Agent Status](https://github.com/uruc/SOC-Automation-Lab/blob/main/images/Pasted%20image%2020240604002929.png)
 
-Now we can start querying events from our agent.
+Now you can start querying events from the Windows agent in Wazuh.
 
-Next, we will generate telemetry from our Windows 10 machine and make sure it is being digested by Wazuh.
-We will send telemetry containing Mimikatz and trigger a custom alert.
+## 4. Generating Telemetry and Custom Alerts
 
-We go to `C:\Program Files (x86)\ossec-agent` in the Windows machine and open the `ossec.conf` file with Notepad.
+### 4.1 Configure Sysmon Event Forwarding to Wazuh
+
+**4.1.1 Modify Wazuh Agent Configuration:**
+On the Windows client machine, navigate to `C:\Program Files (x86)\ossec-agent` and open the `ossec.conf` file with a text editor (e.g., Notepad).
 
 ![Ossec Configuration](https://github.com/uruc/SOC-Automation-Lab/blob/main/images/Pasted%20image%2020240604144648.png)
 
-Now we will add a `<localfile>` section in this config to ingest Sysmon.
-First, we check the full name of Sysmon from the Event Viewer.
+**4.1.2 Add Sysmon Event Forwarding:**
+In the `ossec.conf` file, add a new `<localfile>` section to configure Sysmon event forwarding to Wazuh.
+Check the full name of the Sysmon event log in the Windows Event Viewer.
 
 ![Sysmon Event Log](https://github.com/uruc/SOC-Automation-Lab/blob/main/images/Pasted%20image%2020240604150516.png)
 
-We change the name here:
+Add the following configuration to the `ossec.conf` file:
 
 ![Ossec Sysmon Configuration](https://github.com/uruc/SOC-Automation-Lab/blob/main/images/Pasted%20image%2020240604150556.png)
 
-We could do the same if we wanted to ingest PowerShell.
-For the sake of this lab, we will remove the Application, Security, and System sections. This means that Application, Security, and System events will no longer be forwarded to our Wazuh manager.
-You can leave them on if you like.
+Optional: You can also configure forwarding for other event logs like PowerShell, Application, Security, and System. In this lab, we will remove the Application, Security, and System sections to focus on Sysmon events.
 
-Because customizing the `ossec.conf` file needs administrator permissions, open a new Notepad instance with administrator power, and then open the `ossec.conf` file into this Notepad and save.
+**4.1.3 Save the Configuration File:**
+Since modifying the `ossec.conf` file requires administrator privileges, open a new Notepad instance with administrator rights and save the changes to the file.
 
-Next, we restart the Wazuh service:
+**4.1.4 Restart the Wazuh Agent Service:**
+Restart the Wazuh agent service to apply the configuration changes.
 
 ![Restart Wazuh Agent Service](https://github.com/uruc/SOC-Automation-Lab/blob/main/images/Pasted%20image%2020240604151539.png)
 
-Anytime you change the Wazuh configuration, you need to restart the service from either PowerShell or Windows Services.
+Note: Whenever you modify the Wazuh agent configuration, you need to restart the service either through PowerShell or Windows Services.
 
-Next, we head over to the Wazuh dashboard, and under "Events", we can start searching for Sysmon events.
+**4.1.5 Verify Sysmon Event Forwarding:**
+In the Wazuh web interface, go to the "Events" section and search for Sysmon events to confirm they are being received.
 
 ![Search Sysmon Events](https://github.com/uruc/SOC-Automation-Lab/blob/main/images/Pasted%20image%2020240604152334.png)
 
-The next step is to download Mimikatz on the Windows machine.
-To be able to download Mimikatz onto our Windows machine, we need to either disable Windows Defender or exclude the directory where we will download it.
-Mimikatz is an application that attackers or red teamers use to extract credentials from the target machine.
+### 4.2 Generate Mimikatz Telemetry
+
+**4.2.1 Download Mimikatz:**
+On the Windows client machine, download Mimikatz, a tool commonly used by attackers and red teamers to extract credentials from memory.
+To download Mimikatz, you may need to temporarily disable Windows Defender or exclude the download directory from scanning.
 
 ![Disable Windows Defender](https://github.com/uruc/SOC-Automation-Lab/blob/main/images/Pasted%20image%2020240604152850.png)
 
-Then we download Mimikatz, open PowerShell, go to the location of Mimikatz, and start it.
+**4.2.2 Execute Mimikatz:**
+Open PowerShell, navigate to the directory where Mimikatz is downloaded, and execute it.
 
 ![Start Mimikatz](https://github.com/uruc/SOC-Automation-Lab/blob/main/images/Pasted%20image%2020240604153518.png)
 
-Wazuh, by default, does not log everything and only logs things when a rule or alert is triggered.
-We can change this by going to the Wazuh manager, configuring the `ossec.conf` file, and making it log everything or create a rule that looks at specific events.
-
-Now let's go and modify the `ossec.conf` and log everything for Wazuh.
-We connect to the Wazuh server with SSH and go to `/var/ossec/etc/ossec.conf`.
-First, we copy the original configuration file just in case:
+**4.2.3 Configure Wazuh to Log All Events:**
+By default, Wazuh only logs events that trigger a rule or alert. To log all events, modify the Wazuh manager's `ossec.conf` file.
+Connect to the Wazuh server via SSH and open `/var/ossec/etc/ossec.conf`.
+Create a backup of the original configuration file:
 ```
 cp /var/ossec/etc/ossec.conf ~/ossec-backup.conf
 ```
-Then we can go and change the configuration file.
 
 ![Wazuh Ossec Configuration](https://github.com/uruc/SOC-Automation-Lab/blob/main/images/Pasted%20image%2020240604154130.png)
 
-First, we change the `<logall>` and `<logall_json>` options under the `<ossec_config>` section from "no" to "yes".
-Now let's restart the Wazuh manager:
+Change the `<logall>` and `<logall_json>` options under the `<ossec_config>` section from "no" to "yes".
+Restart the Wazuh manager service:
 ```
 systemctl restart wazuh-manager.service
 ```
 
-What this does is force Wazuh to begin archiving all the logs and put them into the directory called "archives". This file is located in `/var/ossec/logs/archives/`.
-In order for Wazuh to start ingesting these logs, we need to change the configuration in Filebeat.
+This configuration forces Wazuh to archive all logs in the `/var/ossec/logs/archives/` directory.
 
-We go to:
+**4.2.4 Configure Filebeat:**
+To enable Wazuh to ingest the archived logs, modify the Filebeat configuration:
 ```
 nano /etc/filebeat/filebeat.yml
 ```
 
 ![Filebeat Configuration](https://github.com/uruc/SOC-Automation-Lab/blob/main/images/Pasted%20image%2020240604154620.png)
 
-Here, we change the `enabled: false` to `true` for the "archives" input and restart the Filebeat service.
+Change the `enabled: false` to `true` for the "archives" input and restart the Filebeat service.
 
-Now that we've updated Filebeat and the Ossec configuration, let's head back to the Wazuh dashboard and create a new index.
-
-From the Wazuh left-side menu, go to "Stack Management" > "Index Management".
+**4.2.5 Create a New Index in Wazuh:**
+After updating Filebeat and the Ossec configuration, create a new index in the Wazuh web interface to search the archived logs.
+From the left-side menu, go to "Stack Management" > "Index Management".
 
 ![Create Wazuh Index](https://github.com/uruc/SOC-Automation-Lab/blob/main/images/Pasted%20image%2020240604154910.png)
 
-Create a new index for archives so we can search all the logs.
-We put the name `wazuh-archives-*` for everything.
+Create a new index named `wazuh-archives-*` to cover all archived logs.
 
 ![Wazuh Archives Index](https://github.com/uruc/SOC-Automation-Lab/blob/main/images/Pasted%20image%2020240604155026.png)
 
-On the next page, we select "timestamp" as the time field and create our index.
+On the next page, select "timestamp" as the time field and create the index.
 
 ![Create Wazuh Archives Index](https://github.com/uruc/SOC-Automation-Lab/blob/main/images/Pasted%20image%2020240604155124.png)
 
-Next, we go to the left-side menu > "Discover" and select our new index.
+Go to the "Discover" section from the left-side menu and select the newly created index.
 
 ![Discover Wazuh Archives](https://github.com/uruc/SOC-Automation-Lab/blob/main/images/Pasted%20image%2020240604155204.png)
 
-Wazuh, by default, does not include all logs in the manager. Only those that trigger the rules will show up. That's why we had to configure the logs to log everything, making it so that regardless of a rule being triggered or not, we want the manager to archive it to allow us to search for them.
-
-So, in our Wazuh manager CLI, to troubleshoot if Mimikatz logs are being archived, we use `cat` and `grep` on the archive logs:
+**4.2.6 Troubleshoot Mimikatz Logs:**
+To troubleshoot if Mimikatz logs are being archived, use `cat` and `grep` on the archive logs in the Wazuh manager CLI:
 ```
 cat /var/ossec/logs/archives/archives.log | grep -i mimikatz
 ```
 
 ![Check Mimikatz Logs](https://github.com/uruc/SOC-Automation-Lab/blob/main/images/Pasted%20image%2020240604155940.png)
 
-If we don't see anything in the archives, then a Mimikatz event did not generate. This means no matter what, we won't see any Mimikatz events in our dashboard.
+If no Mimikatz events are found in the archives, it means no Mimikatz event was generated, and you won't see any related events in the Wazuh web interface.
 
-So, we will relaunch Mimikatz from the Windows 10 machine. We also check the Event Viewer to make sure Sysmon is capturing Mimikatz.
+**4.2.7 Relaunch Mimikatz:**
+Relaunch Mimikatz on the Windows client machine and check the Event Viewer to ensure Sysmon is capturing Mimikatz events.
 
 ![Mimikatz Sysmon Event](https://github.com/uruc/SOC-Automation-Lab/blob/main/images/Pasted%20image%2020240604160828.png)
 
-Check our archive file again for Mimikatz and see that logs are generated.
+Check the archive file again for Mimikatz logs to confirm they are being generated.
 
 ![Mimikatz Logs Generated](https://github.com/uruc/SOC-Automation-Lab/blob/main/images/Pasted%20image%2020240604164746.png)
 ![Mimikatz Logs](https://github.com/uruc/SOC-Automation-Lab/blob/main/images/Pasted%20image%2020240604164803.png)
 
-Looking at these logs and checking the fields, we will use the `originalfilename` field to craft our alert.
+### 4.3 Create a Custom Mimikatz Alert
+
+**4.3.1 Analyze Mimikatz Logs:**
+Examine the Mimikatz logs and identify a suitable field for crafting an alert. In this example, we will use the `originalfilename` field.
 
 ![Mimikatz Original Filename](https://github.com/uruc/SOC-Automation-Lab/blob/main/images/Pasted%20image%2020240604165046.png)
 
-Because if we were to use a field such as `image`, an attacker would simply change the name of Mimikatz, and the alert would be bypassed. But by building an alert on the `originalfilename` field, we can neglect this.
+Using the `originalfilename` field ensures the alert will trigger even if an attacker changes the Mimikatz executable name.
 
-Now we can create a rule from both CLI or the dashboard.
+**4.3.2 Create a Custom Rule:**
+You can create a custom rule either from the CLI or the Wazuh web interface.
 
 ![Wazuh Rules](https://github.com/uruc/SOC-Automation-Lab/blob/main/images/Pasted%20image%2020240604165457.png)
 
-Here, we go to the "Manage rule files" button. Here, we can filter the rules by name, and when we filter for "sysmon", we can look into the rules by clicking the eye icon.
+In the web interface, click on the "Manage rule files" button. Filter the rules by name (e.g., "sysmon") and view the rule details by clicking the eye icon.
 
 ![Sysmon Rules](https://github.com/uruc/SOC-Automation-Lab/blob/main/images/Pasted%20image%2020240604165717.png)
 
-These are Sysmon rules that are built into Wazuh, specifically targeting event ID 1. We will copy one of these as a reference and build it out as a custom rule to detect Mimikatz.
+These are Sysmon-specific rules built into Wazuh for event ID 1. Copy one of these rules as a reference and modify it to create a custom Mimikatz detection rule.
 
-So, we take this rule and change it as we want:
+Example custom rule:
 ```xml
 <rule id="100002" level="15">
   <if_group>sysmon_event1</if_group>
@@ -515,56 +523,60 @@ So, we take this rule and change it as we want:
 </rule>
 ```
 
-And we go to the "Custom rules" button on the previous page. Here, we go to edit this "local_rules.xml" file and add our rule for Mimikatz.
+Go to the "Custom rules" button and edit the "local_rules.xml" file. Add the custom Mimikatz detection rule.
 
-![Custom Mimikatz Rule](https://github.com/uruc/SOC-Automation-Lab/blob/main/images/Pasted%20image%2020240604171432.png)
+![Custom Mimikatz Rule](https://github.com/uruc/SOC-Automation-Lab/blob/main/images/Pasted%20image%2020240604171432
+
+png)
 ![Custom Mimikatz Rule Added](https://github.com/uruc/SOC-Automation-Lab/blob/main/images/Pasted%20image%2020240604171857.png)
 
-After we save the file and restart the manager, we can also change the name of the Mimikatz file to something else to test the rules that we created. Because in theory, changing the file name would not work, and our rule should catch Mimikatz regardless.
+Save the file and restart the Wazuh manager service.
+
+**4.3.3 Test the Custom Rule:**
+To test the custom rule, rename the Mimikatz executable on the Windows client machine to something different.
 
 ![Renamed Mimikatz](https://github.com/uruc/SOC-Automation-Lab/blob/main/images/Pasted%20image%2020240604172430.png)
 
-And we start Mimikatz.
+Execute the renamed Mimikatz.
 
 ![Mimikatz Started](https://github.com/uruc/SOC-Automation-Lab/blob/main/images/Pasted%20image%2020240604172710.png)
 
-And here we go:
+Verify that the custom rule triggers an alert in Wazuh, even with the renamed Mimikatz executable.
 
 ![Mimikatz Alert Triggered](https://github.com/uruc/SOC-Automation-Lab/blob/main/images/Pasted%20image%2020240604173838.png)
 
-We even used our renamed Mimikatz, and the alert still triggered.
+## 5. Automation with Shuffle and TheHive
 
-For the next step, we will begin performing some automation using Shuffle and TheHive.
+### 5.1 Set Up Shuffle
 
-Shuffle is our SOAR platform, and we connect it to TheHive to send the alert and then send it to our SOC analyst. After this step, we will have a fully functional lab that integrates Wazuh, TheHive, and Shuffle.
-
-Wazuh itself is a strong system, but we will also see how we can utilize SOAR and case management systems like TheHive.
-
-First, we go to the Shuffle website (shuffler.io) and create an account.
+**5.1.1 Create a Shuffle Account:**
+Go to the Shuffle website (shuffler.io) and create an account.
 
 ![Shuffle Account](https://github.com/uruc/SOC-Automation-Lab/blob/main/images/Pasted%20image%2020240604213121.png)
 
-Next, we click on "New Workflow" and create our workflow.
-You can select any random use cases.
+**5.1.2 Create a New Workflow:**
+Click on "New Workflow" and create a workflow. You can select any random use case for demonstration purposes.
 
 ![Create Shuffle Workflow](https://github.com/uruc/SOC-Automation-Lab/blob/main/images/Pasted%20image%2020240604213428.png)
 
-After clicking "Done", we head over to this page, and first, on the bottom left of the page, we select "Triggers".
-Here, we take a "Webhook" and connect it to "Change Me". Then, we set its name and copy the Webhook URI on the right side because we will need to add this into our Ossec configuration hosted on the Wazuh manager.
+**5.1.3 Add a Webhook Trigger:**
+On the workflow page, click on "Triggers" at the bottom left. Drag a "Webhook" trigger and connect it to the "Change Me" node.
+Set a name for the webhook and copy the Webhook URI from the right side. This URI will be added to the Ossec configuration on the Wazuh manager.
 
 ![Shuffle Webhook](https://github.com/uruc/SOC-Automation-Lab/blob/main/images/Pasted%20image%2020240604213723.png)
 
-Before going to Wazuh, click on the "Change Me" button and make sure it's in "Repeat back to me" mode, and for call options, select "Execution argument". Then, we save the workflow.
+**5.1.4 Configure the "Change Me" Node:**
+Click on the "Change Me" node and set it to "Repeat back to me" mode. For call options, select "Execution argument". Save the workflow.
 
 ![Shuffle Workflow Settings](https://github.com/uruc/SOC-Automation-Lab/blob/main/images/2024-06-04%2021_41_05-Workflow%20-%20SOC%20Automation%20Lab.png)
 
-On our Wazuh manager CLI, we need to tell Wazuh that we are going to connect to Shuffle.
-We can do this by adding what is called an "integration" tag in the Ossec configuration.
+**5.1.5 Configure Wazuh to Connect to Shuffle:**
+On the Wazuh manager CLI, modify the `ossec.conf` file to add an integration for Shuffle:
 ```
 nano /var/ossec/etc/ossec.conf
 ```
 
-And here, we add this integration:
+Add the following integration configuration:
 ```xml
 <integration>
   <name>shuffle</name>
@@ -574,117 +586,110 @@ And here, we add this integration:
 </integration>
 ```
 
-Because instead of `<level>`, we want to send the alerts based on the rule ID, we will change the `<level>` tag with `<rule_id>100002</rule_id>`.
+Replace the `<level>` tag with `<rule_id>100002</rule_id>` to send alerts based on the custom Mimikatz rule ID.
 
 ![Wazuh Shuffle Integration](https://github.com/uruc/SOC-Automation-Lab/blob/main/images/Pasted%20image%2020240604225725.png)
 
-And of course, we restart the service:
+Restart the Wazuh manager service:
 ```
 systemctl restart wazuh-manager.service
 ```
 
-Now we will regenerate the Mimikatz telemetry on our Windows machine again.
-
-After we start Mimikatz again, we head over to Shuffle and click on our webhook ("Wazuh-Alerts") and click "Start".
+**5.1.6 Test the Shuffle Integration:**
+Regenerate the Mimikatz telemetry on the Windows client machine.
+In Shuffle, click on the webhook trigger ("Wazuh-Alerts") and click "Start".
 
 ![Shuffle Webhook Start](https://github.com/uruc/SOC-Automation-Lab/blob/main/images/Pasted%20image%2020240604230243.png)
 
-And we have a run alert.
+Verify that the alert is received in Shuffle.
 
-Now we will build a workflow for Mimikatz, which will only work for this demo, but the same concepts can be applied to other cases. With this example, we can customize other alerts and automations.
+### 5.2 Build a Mimikatz Workflow
 
-**Workflow:**
+**Workflow Steps:**
 1. Mimikatz alert sent to Shuffle
 2. Shuffle receives Mimikatz alert / extract SHA256 hash from file
 3. Check reputation score with VirusTotal
 4. Send details to TheHive to create an alert
 5. Send an email to the SOC analyst to begin the investigation
 
-When we look at the return values for the hashes, we notice that they are appended by their hash type, like `sha1=hashvalue`, etc.
+**5.2.1 Extract SHA256 Hash:**
+Observe that the return values for the hashes are appended by their hash type (e.g., `sha1=hashvalue`).
+To automate the workflow, parse out the hash value itself. Sending the entire value, including `sha1=`, to VirusTotal will result in an invalid query.
 
-If we wanted to automate this, we would need to parse out the hash value itself because if we don't do this step, the entire value, including `sha1=`, will be sent over to VirusTotal to check, which will be nonsense. We only want to send the hash value.
-
-To do this, we click on the "Change Me" icon, and now, instead of the "Repeat back to me" option, we select "Regex capture group".
-After that, in the "Input data", we select the "hashes" option.
-And finally, for the "Regex" tab, we will need to put a regex to parse the SHA256 value of the hash.
-To parse the SHA256 value, the regex is `SHA256=([0-9A-Fa-f]{64})`.
-We enter this in the "Regex" tab and save our workflow.
+Click on the "Change Me" node and select "Regex capture group" instead of "Repeat back to me".
+In the "Input data", select the "hashes" option.
+In the "Regex" tab, enter the regex pattern to parse the SHA256 hash value: `SHA256=([0-9A-Fa-f]{64})`.
+Save the workflow.
 
 ![Shuffle Regex](https://github.com/uruc/SOC-Automation-Lab/blob/main/images/Pasted%20image%2020240604234504.png)
 
-After we click on the running man button, which is the "Show execution" button, we see that our hash value is extracted.
+Click on the "Show execution" button (running man icon) to verify that the hash value is extracted correctly.
 
 ![Extracted Hash Value](https://github.com/uruc/SOC-Automation-Lab/blob/main/images/Pasted%20image%2020240604234729.png)
 
-Now that we've actually parsed the hash value for the file, we can automatically send it to VirusTotal and check the reputation score.
-The next thing we want to do is utilize the VirusTotal API so we can automatically ask VirusTotal about the hashes and return the values to us.
-And in order to utilize the API, we need to create an account with VirusTotal.
+**5.2.2 Integrate VirusTotal:**
+Create a VirusTotal account to access the API.
 
 ![VirusTotal Account](https://github.com/uruc/SOC-Automation-Lab/blob/main/images/Pasted%20image%2020240604235908.png)
 
-We copy our API key and come back to Shuffle, click on the "Apps" and search for "VirusTotal". We pull "VirusTotal" to the workflow, and it will automatically connect.
+Copy the API key and return to Shuffle.
+In Shuffle, click on the "Apps" tab and search for "VirusTotal". Drag the "VirusTotal" app to the workflow, and it will automatically connect.
 
 ![VirusTotal App](https://github.com/uruc/SOC-Automation-Lab/blob/main/images/Pasted%20image%2020240605000230.png)
 
-For the API key, you can either enter it on the right side or click "Authenticate VirusTotal v3" and do it there.
+Enter the API key on the right side or click "Authenticate VirusTotal v3" to authenticate.
 
 ![VirusTotal Authentication](https://github.com/uruc/SOC-Automation-Lab/blob/main/images/Pasted%20image%2020240605000358.png)
 
-Now, after we change the "ID" field to the "SHA256Regex" that we created, we save our workflow and rerun it.
+Change the "ID" field to the "SHA256Regex" value created earlier.
 
 ![VirusTotal ID](https://github.com/uruc/SOC-Automation-Lab/blob/main/images/Pasted%20image%2020240605001826.png)
 
-We see that VirusTotal now has results.
+Save the workflow and rerun it.
 
 ![VirusTotal Results](https://github.com/uruc/SOC-Automation-Lab/blob/main/images/Pasted%20image%2020240605001925.png)
 
-When we expand the results, there is a lot of information, and we see that 67 scanners had detected this file as malicious.
+Expand the results to view the VirusTotal scan details, including the number of detections.
 
 ![VirusTotal Detection](https://github.com/uruc/SOC-Automation-Lab/blob/main/images/Pasted%20image%2020240605002209.png)
 
-To recap, so far, we set up our SOAR platform to receive our Wazuh alert, then we performed regex to parse out the SHA256 hash, and then we used VirusTotal to check its reputation.
-Now, for the next step, we will send the details over to TheHive so TheHive can create an alert for case management.
-
-We search for "TheHive" in the "Apps" in Shuffle and drag it into our workflow.
-If we recall, we can connect to TheHive with the IP address of TheHive that we created on DigitalOcean and port number 9000.
+**5.2.3 Integrate TheHive:**
+In Shuffle, search for "TheHive" in the "Apps" and drag it into the workflow.
+TheHive can be connected using the IP address and port number (9000) of the TheHive instance created on DigitalOcean.
 
 ![TheHive Login](https://github.com/uruc/SOC-Automation-Lab/blob/main/images/Pasted%20image%2020240605112834.png)
 
-```
-http://143.198.56.201:9000/login
-```
+Log in to TheHive using the default credentials:
+Username: `admin@thehive.local`
+Password: `secret`
 
-By default, the login is `admin@thehive.local`, and the password is `secret`.
-After we log in, we will create a new organization and user for this organization.
+**5.2.4 Configure TheHive:**
+Create a new organization and user for the organization in TheHive.
 
 ![TheHive Organizations](https://github.com/uruc/SOC-Automation-Lab/blob/main/images/Pasted%20image%2020240605113123.png)
 
-And for this organization, we add new users with different profiles if we like.
+Add new users with different profiles as needed.
 
 ![TheHive Users](https://github.com/uruc/SOC-Automation-Lab/blob/main/images/Pasted%20image%2020240605113317.png)
 
-Then, we set new passwords for these users.
-Now, for our SOAR users that we created for Shuffle, we want to create an API key.
+Set new passwords for the users.
+For the SOAR user created for Shuffle integration, generate an API key.
 
 ![TheHive API Key](https://github.com/uruc/SOC-Automation-Lab/blob/main/images/Pasted%20image%2020240605113655.png)
 
-We create an API key and put it somewhere safe. We will be using it to authenticate Shuffle.
-Now let's log out from the admin account and log in from one of the user accounts.
-When we log in, we see a page like this. Of course, we don't have a case right now.
+Create an API key and store it securely. This key will be used to authenticate Shuffle.
+Log out from the admin account and log in with one of the user accounts.
 
 ![TheHive Dashboard](https://github.com/uruc/SOC-Automation-Lab/blob/main/images/Pasted%20image%2020240605115228.png)
 
-Now let's head over to Shuffle and configure it to work with TheHive.
-
-![Shuffle TheHive](https://github.com/uruc/SOC-Automation-Lab/blob/main/images/Pasted%20image%2020240605115401.png)
-
-Here, we click on the orange "Authenticate TheHive" button, and we enter our API key that we created and saved from TheHive.
-And for the URL part, we want to enter the public IP of TheHive with the port number.
+**5.2.5 Configure Shuffle to Work with TheHive:**
+In Shuffle, click on the orange "Authenticate TheHive" button and enter the API key created earlier.
+For the URL, enter the public IP address of TheHive along with the port number.
 
 ![Shuffle TheHive Authentication](https://github.com/uruc/SOC-Automation-Lab/blob/main/images/Pasted%20image%2020240605115759.png)
 
-Next, we click on "TheHive" under the "Find actions", and we want to select "Create alerts".
-Now, we need to set the JSON payload so TheHive can get the alerts. Here is the specific example payload for this lab and for Mimikatz:
+Under "Find actions", click on "TheHive" and select "Create alerts".
+Set the JSON payload for TheHive to receive the alerts. Here's an example payload for the Mimikatz scenario:
 
 ```json
 {
@@ -706,57 +711,75 @@ Now, we need to set the JSON payload so TheHive can get the alerts. Here is the 
 }
 ```
 
-To set this payload, we go to the "Body" part of this page and expand it.
+Expand the "Body" section to set the payload.
 
 ![Shuffle TheHive Body](https://github.com/uruc/SOC-Automation-Lab/blob/main/images/Pasted%20image%2020240605141313.png)
 
-And there, we can set the payload on the left side and test the output on the right side:
+Set the payload on the left side and test the output on the right side.
 
 ![Shuffle TheHive Payload](https://github.com/uruc/SOC-Automation-Lab/blob/main/images/Pasted%20image%2020240605145351.png)
 
-Now, when we save our workflow and rerun it, right there, we see that an alert pops up in our TheHive dashboard.
+Save the workflow and rerun it. An alert should appear in the TheHive dashboard.
 
 ![TheHive Alert](https://github.com/uruc/SOC-Automation-Lab/blob/main/images/Pasted%20image%2020240605143428.png)
 
-If you have a firewall set up for TheHive in your cloud provider, you should add a new inbound rule to set the port range of 9000 so any source can access TheHive from port 9000.
-And when we click on the alert, we see a page like this:
+Note: If the alert doesn't appear, ensure that the firewall for TheHive in your cloud provider allows inbound traffic on port 9000 from any source.
+
+Click on the alert to view the details.
 
 ![TheHive Alert Details](https://github.com/uruc/SOC-Automation-Lab/blob/main/images/Pasted%20image%2020240605145839.png)
 
-To have more information about the alert, you can customize any space in TheHive's JSON payload.
-For instance, let's create a more extensive summary.
-On Shuffle, I click on the "Show Body" button and see the spaces for all JSON payloads.
+To include more information in the alert, customize the fields in TheHive's JSON payload.
+For example, let's create a more detailed summary.
+In Shuffle, click on the "Show Body" button to view the available JSON payload fields.
 
-Here, in the summary, let's say I want to show the command line that is related to this alert.
-You can add anything here, depending on what you want.
-Actually, I decided to set the technique and command line for the summary part:
+In the summary field, you can include additional details like the technique and command line associated with the alert.
 
 ![Shuffle TheHive Summary](https://github.com/uruc/SOC-Automation-Lab/blob/main/images/Pasted%20image%2020240605165035.png)
 
-You can find what to write in these lines from the body part of TheHive in Shuffle.
+Refer to the body part of TheHive in Shuffle to determine what to include in these fields.
 
 ![Shuffle TheHive Body](https://github.com/uruc/SOC-Automation-Lab/blob/main/images/Pasted%20image%2020240605165143.png)
 
-After we save and rerun the workflow, we see our new alert with more information.
+Save and rerun the workflow to see the updated alert with more information.
 
 ![TheHive Alert Updated](https://github.com/uruc/SOC-Automation-Lab/blob/main/images/Pasted%20image%2020240605164956.png)
 
-Now, our next step is to send an email to our analyst containing relevant information.
-In our Shuffle workflow, we find "Email" in the "Apps" and connect VirusTotal to our email.
+**5.2.6 Send Email Notification:**
+In Shuffle, find "Email" in the "Apps" and connect VirusTotal to the email node.
 
 ![Shuffle Email](https://github.com/uruc/SOC-Automation-Lab/blob/main/images/Pasted%20image%2020240605165431.png)
 
-Here, you can use any email you want to send the alert with the necessary information about the event or subject line.
+Configure the email settings, including the recipient, subject, and body, to send the alert with relevant event information.
 
 ![Shuffle Email Configuration](https://github.com/uruc/SOC-Automation-Lab/blob/main/images/Pasted%20image%2020240605170704.png)
 
-We save our workflow and rerun it.
+Save the workflow and rerun it.
 
 ![Shuffle Workflow Final](https://github.com/uruc/SOC-Automation-Lab/blob/main/images/Pasted%20image%2020240605170809.png)
 
-This is our final workflow.
-And when we check our email, we see that it is working.
+Verify that the email is received with the expected alert details.
 
 ![Email Received](https://github.com/uruc/SOC-Automation-Lab/blob/main/images/Pasted%20image%2020240605170915.png)
 
-This concludes the setup and configuration of the SOC Automation Lab, integrating Wazuh, TheHive, and Shuffle for automated event monitoring, alerting, and incident response. With this foundation, you can further customize and expand the automation workflows to suit your specific SOC requirements.
+## 6. Conclusion
+
+We have successfully set up and configured the SOC Automation Lab, integrating Wazuh, TheHive, and Shuffle for automated event monitoring, alerting, and incident response. This foundation provides a solid starting point for further customization and expansion of automation workflows to meet our specific SOC requirements.
+The key steps and achievements of this lab include:
+
+1. Installing and configuring a Windows 10 client with Sysmon for detailed event generation.
+2. Setting up Wazuh as the central event management and alerting platform.
+3. Installing and configuring TheHive for case management and coordinated response actions.
+4. Generating Mimikatz telemetry and creating custom alerts in Wazuh.
+5. Integrating Shuffle as the SOAR platform for workflow automation.
+6. Building an automated workflow to extract file hashes, check reputation scores with VirusTotal, create alerts in TheHive, and notify SOC analysts via email.
+
+With this lab, we have gained hands-on experience in implementing an automated SOC workflow using powerful open-source tools. We can now leverage this knowledge to enhance your organization's security operations, improve incident response times, and streamline SOC processes.
+
+Remember to continuously refine and adapt your automation workflows based on evolving threats, new tools, and changing business requirements. Regularly review and update your SOC playbooks, integrate additional threat intelligence sources, and explore advanced features of the tools used in this lab.
+
+By embracing automation and leveraging the capabilities of Wazuh, TheHive, and Shuffle, you can build a more efficient, effective, and resilient SOC that proactively detects and responds to security incidents.
+
+## 7. References
+- https://www.mydfir.com/
+- https://www.youtube.com/watch?v=Lb_ukgtYK_U
