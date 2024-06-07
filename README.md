@@ -1,8 +1,6 @@
-Here is the updated and completed README file for your SOC Automation Project, with the additional content you provided and the corrected image links:
-
 # SOC Automation Lab
 
-**Author: [Uruc Tarim](https://github.com/uruc)**
+**[Uruc Tarim](https://github.com/uruc)**
 
 ## Introduction
 
