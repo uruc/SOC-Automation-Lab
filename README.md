@@ -121,9 +121,9 @@ From the left side menu, we go to Droplets > Wazuh > Access > Launch Droplet Con
 ![Launch Droplet Console](https://github.com/uruc/SOC-Automation-Lab/blob/main/images/Pasted%20image%2020240603223020.png)
 
 First, we update and upgrade the system:
-
+```
 sudo apt-get update && sudo apt-get upgrade
-
+```
 Next, we start with the Wazuh installer:
 ```
 curl -sO https://packages.wazuh.com/4.7/wazuh-install.sh && sudo bash ./wazuh-install.sh -a
