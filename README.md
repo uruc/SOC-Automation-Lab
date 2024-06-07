@@ -2,75 +2,75 @@
 
 **[Uruc Tarim](https://github.com/uruc)**
 
-## Introduction
+## 1. Introduction
 
-### Overview
-The SOC Automation Project aims to create an automated Security Operations Center (SOC) workflow that streamlines event monitoring, alerting, and incident response. By leveraging tools such as Wazuh, Shuffle, and TheHive, this project will enhance the efficiency and effectiveness of SOC operations. The project involves setting up a Windows 10 client with Sysmon for event generation, Wazuh for event management and alerting, Shuffle for automation, and TheHive for case management and response actions.
+### 1.1 Overview
+The SOC Automation Project aims to create an automated Security Operations Center (SOC) workflow that streamlines event monitoring, alerting, and incident response. By leveraging powerful open-source tools such as Wazuh, Shuffle, and TheHive, this project enhances the efficiency and effectiveness of SOC operations. The project involves setting up a Windows 10 client with Sysmon for detailed event generation, Wazuh for comprehensive event management and alerting, Shuffle for workflow automation, and TheHive for case management and coordinated response actions.
 
 ![SOC Automation Diagram](https://github.com/uruc/SOC-Automation-Lab/blob/main/SOC_Automation_Diagram.png)
 
-### Purpose and Goals
-- **Automate Event Collection and Analysis:** Ensure security events are collected and analyzed in real-time with minimal manual intervention.
-- **Streamline Alerting Process:** Automate the process of generating and forwarding alerts to relevant systems and personnel.
-- **Enhance Incident Response Capabilities:** Automate responsive actions to security incidents, improving reaction time and effectiveness.
-- **Improve SOC Efficiency:** Reduce the workload on SOC analysts by automating routine tasks, allowing them to focus on critical issues.
+### 1.2 Purpose and Goals
+- **Automate Event Collection and Analysis:** Ensure security events are collected and analyzed in real-time with minimal manual intervention, enabling proactive threat detection and response.
+- **Streamline Alerting Process:** Automate the process of generating and forwarding alerts to relevant systems and personnel, reducing response times and minimizing the risk of overlooking critical incidents.
+- **Enhance Incident Response Capabilities:** Automate responsive actions to security incidents, improving reaction time, consistency, and effectiveness in mitigating threats.
+- **Improve SOC Efficiency:** Reduce the workload on SOC analysts by automating routine tasks, allowing them to focus on high-priority issues and strategic initiatives.
 
-## Prerequisites
+## 2. Prerequisites
 
-### Hardware Requirements
-- A host machine capable of running multiple virtual machines.
-- Sufficient CPU, RAM, and disk space to support the VMs and their operations.
+### 2.1 Hardware Requirements
+- A host machine capable of running multiple virtual machines simultaneously.
+- Sufficient CPU, RAM, and disk space to support the VMs and their expected workloads.
 
-### Software Requirements
-- **VMware Workstation/Fusion:** For creating and managing virtual machines.
-- **Windows 10:** As the client machine for generating security events.
-- **Ubuntu 22.04:** For deploying Wazuh and TheHive.
-- **Sysmon:** Installed on Windows 10 for detailed event logging.
+### 2.2 Software Requirements
+- **VMware Workstation/Fusion:** Industry-standard virtualization platform for creating and managing virtual machines.
+- **Windows 10:** The client machine for generating realistic security events and testing the SOC automation workflow.
+- **Ubuntu 22.04:** The stable and feature-rich Linux distribution for deploying Wazuh and TheHive.
+- **Sysmon:** A powerful Windows system monitoring tool that provides detailed event logging and telemetry.
 
-### Tools and Platforms
-- **Wazuh:** An open-source security monitoring platform that will serve as the central point for event collection, analysis, and alerting.
-- **Shuffle:** A security automation platform that will handle the workflow automation for alert processing and response actions.
+### 2.3 Tools and Platforms
+- **Wazuh:** An open-source, enterprise-grade security monitoring platform that serves as the central point for event collection, analysis, and alerting.
+- **Shuffle:** A flexible, open-source security automation platform that handles workflow automation for alert processing and response actions.
 - **TheHive:** A scalable, open-source Security Incident Response Platform designed for SOCs to efficiently manage and resolve incidents.
-- **VirusTotal:** An online service that analyzes files and URLs to detect viruses, worms, trojans, and other kinds of malicious content.
-- **Cloud Services or Additional VMs:** Wazuh and TheHive can be deployed either on cloud infrastructure or additional virtual machines depending on your resources and preferences.
+- **VirusTotal:** An online service that analyzes files and URLs to detect various types of malicious content using multiple antivirus engines and scanners.
+- **Cloud Services or Additional VMs:** Wazuh and TheHive can be deployed either on cloud infrastructure or additional virtual machines, depending on your resource availability and preferences.
 
-### Prior Knowledge
-- **Basic Understanding of Virtual Machines:** Familiarity with setting up and managing VMs using VMware.
-- **Basic Linux Command Line Skills:** Ability to perform basic tasks in a Linux environment, such as installing software and configuring services.
-- **Knowledge of Security Operations and Tools:** Understanding of security monitoring, event logging, and incident response concepts.
+### 2.4 Prior Knowledge
+- **Basic Understanding of Virtual Machines:** Familiarity with setting up and managing VMs using VMware or similar virtualization platforms.
+- **Basic Linux Command Line Skills:** Ability to perform essential tasks in a Linux environment, such as installing software packages and configuring services.
+- **Knowledge of Security Operations and Tools:** Foundational understanding of security monitoring, event logging, and incident response concepts and tools.
 
-## Setup
+## 3. Setup
 
-### Step 1: Install and Configure Windows 10 with Sysmon
+### 3.1 Step 1: Install and Configure Windows 10 with Sysmon
 
-**Install Windows 10 on VMware:**
+**3.1.1 Install Windows 10 on VMware:**
  
    ![Windows 10 Installation](https://github.com/uruc/SOC-Automation-Lab/blob/main/images/Pasted%20image%2020240603131110.png)
 
 
-**Download Sysmon:**
+**3.1.2 Download Sysmon:**
 
    ![Sysmon Installation](https://github.com/uruc/SOC-Automation-Lab/blob/main/images/Pasted%20image%2020240603131150.png)
 
-**Download Sysmon configuration files from [Sysmon Modular Config](https://github.com/olafhartong/sysmon-modular):**
+**3.1.3 Download Sysmon configuration files from [Sysmon Modular Config](https://github.com/olafhartong/sysmon-modular):**
 
    ![Sysmon Modular Config](https://github.com/uruc/SOC-Automation-Lab/blob/main/images/Pasted%20image%2020240603131815.png)
    ![Sysmon Modular Config Files](https://github.com/uruc/SOC-Automation-Lab/blob/main/images/Pasted%20image%2020240603132002.png)
 
-**Extract the Sysmon zip file and open PowerShell as an administrator. Navigate to the Sysmon directory extracted from the zip file:**
+**3.1.4 Extract the Sysmon zip file and open PowerShell as an administrator. Navigate to the Sysmon directory extracted from the zip file:**
 
    ![Extract Sysmon Zip](https://github.com/uruc/SOC-Automation-Lab/blob/main/images/Pasted%20image%2020240603133020.png)
 
-**Place the Sysmon configuration file into the Sysmon directory as well.**
+**3.1.5 Place the Sysmon configuration file into the Sysmon directory as well.**
 
-**Before installing Sysmon, check if it is already installed on the Windows machine by verifying:**
+**3.1.6 Before installing Sysmon, check if it is already installed on the Windows machine by verifying:**
  
    - Services
    - Event Viewer > Applications and Services Logs > Microsoft > Windows
 
    ![Check Sysmon Installation](https://github.com/uruc/SOC-Automation-Lab/blob/main/images/Pasted%20image%2020240603133433.png)
 
-**Since Sysmon is not installed, proceed with the installation using the command:**
+**3.1.7 Since Sysmon is not installed, proceed with the installation using the command:**
 
 ```
 .\Sysmon64.exe -i .\sysmonconfig.xml
@@ -78,94 +78,101 @@ The SOC Automation Project aims to create an automated Security Operations Cente
 
    ![Install Sysmon](https://github.com/uruc/SOC-Automation-Lab/blob/main/images/Pasted%20image%2020240603154817.png)
 
-**After a short installation, verify that Sysmon is installed on the system:**
+**3.1.8 After a short installation, verify that Sysmon is installed on the system:**
 
    ![Verify Sysmon Installation](https://github.com/uruc/SOC-Automation-Lab/blob/main/images/Pasted%20image%2020240603154953.png)
 
 With this step, our Windows 10 machine with Sysmon is ready. The next step is setting up Wazuh.
 
-### Step 2: Set Up Wazuh Server
+### 3.2 Step 2: Set Up Wazuh Server
 
-To set up the Wazuh server, we will be using DigitalOcean cloud service. However, you can use any other cloud platform or virtual machines as well. We start by creating a droplet from the menu:
+**3.2.1 Create a Droplet on DigitalOcean:**
+To set up the Wazuh server, we will be using DigitalOcean, a popular cloud service provider. However, you can use any other cloud platform or virtual machines as well. We start by creating a new Droplet from the DigitalOcean menu:
 
 ![Create Droplet](https://github.com/uruc/SOC-Automation-Lab/blob/main/images/Pasted%20image%2020240603215218.png)
 
-We select Ubuntu 22.04 as our operating system:
+We select Ubuntu 22.04 as our operating system for the Droplet:
 
 ![Select Ubuntu](https://github.com/uruc/SOC-Automation-Lab/blob/main/images/Pasted%20image%2020240603220120.png)
 
-We use a root password and change the name to Wazuh, then create the droplet:
+We use a root password for authentication and change the Droplet name to "Wazuh", then create the Droplet:
 
 ![Create Wazuh Droplet](https://github.com/uruc/SOC-Automation-Lab/blob/main/images/Pasted%20image%2020240603220521.png)
 
-Next, we need to set up a firewall to prevent external scan spams:
-From Networking > Firewall > Create Firewall:
+**3.2.2 Set Up a Firewall:**
+Next, we need to set up a firewall to prevent unauthorized access and external scan spams. From the DigitalOcean menu, go to Networking > Firewall > Create Firewall:
 
 ![Create Firewall](https://github.com/uruc/SOC-Automation-Lab/blob/main/images/Pasted%20image%2020240603220742.png)
 
-We change the inbound rules to only allow our own IP:
+We modify the inbound rules to allow access only from our own IP address:
 
 ![Set Inbound Rules](https://github.com/uruc/SOC-Automation-Lab/blob/main/images/Pasted%20image%2020240603220920.png)
 
-After setting up the firewall, we apply it to our Wazuh server:
+After setting up the firewall rules, we apply the firewall to our Wazuh Droplet:
 
 ![Apply Firewall](https://github.com/uruc/SOC-Automation-Lab/blob/main/images/Pasted%20image%2020240603221926.png)
 ![Firewall Protection](https://github.com/uruc/SOC-Automation-Lab/blob/main/images/Pasted%20image%2020240603222113.png)
 
-Now our firewall is protecting our virtual machine.
+Now our firewall is protecting the Wazuh virtual machine.
 
-From the left side menu, we go to Droplets > Wazuh > Access > Launch Droplet Console. This allows us to connect to the server via SSH:
+**3.2.3 Connect to the Wazuh Server via SSH:**
+From the DigitalOcean left-side menu, go to Droplets > Wazuh > Access > Launch Droplet Console. This allows us to connect to the Wazuh server using SSH:
 
 ![Launch Droplet Console](https://github.com/uruc/SOC-Automation-Lab/blob/main/images/Pasted%20image%2020240603223020.png)
 
-First, we update and upgrade the system:
+**3.2.4 Update and Upgrade the System:**
+First, we update and upgrade the system to ensure we have the latest packages and security patches:
 ```
 sudo apt-get update && sudo apt-get upgrade
 ```
-Next, we start with the Wazuh installer:
+**3.2.5 Install Wazuh:**
+We start the Wazuh installation using the official Wazuh installer script:
 ```
 curl -sO https://packages.wazuh.com/4.7/wazuh-install.sh && sudo bash ./wazuh-install.sh -a
 ```
-The installation will start:
+The installation process will begin:
 
 ![Wazuh Installation](https://github.com/uruc/SOC-Automation-Lab/blob/main/images/Pasted%20image%2020240603224933.png)
 
-We take down the password that is generated:
+We take note of the generated password for the "admin" user:
 ```
 User: admin
 Password: *******************
 ```
 
-To log in to Wazuh, we go to our Wazuh server's public IP in a browser with `https://` in front:
+**3.2.6 Access the Wazuh Web Interface:**
+To log in to the Wazuh web interface, we open a web browser and enter the Wazuh server's public IP address with `https://` prefix:
 
 ![Wazuh Login](https://github.com/uruc/SOC-Automation-Lab/blob/main/images/Pasted%20image%2020240603225355.png)
 
-Here, click "Proceed" and "Continue":
+Click "Proceed" and "Continue" to bypass the self-signed SSL certificate warning:
 
 ![Wazuh Login Continue](https://github.com/uruc/SOC-Automation-Lab/blob/main/images/Pasted%20image%2020240603225424.png)
 
-Use the password that was generated with the username "admin", and we are in:
+Use the generated password with the username "admin" to log in to the Wazuh web interface:
 
 ![Wazuh Dashboard](https://github.com/uruc/SOC-Automation-Lab/blob/main/images/Pasted%20image%2020240603225621.png)
 
-Now we have our client machine and Wazuh up and running. The next step is to install TheHive.
+Now we have our client machine and Wazuh server up and running. The next step is to install TheHive.
 
-For this, we will create another droplet in DigitalOcean with Ubuntu 22.04:
+### 3.3 Step 3: Install TheHive
+
+**3.3.1 Create a New Droplet for TheHive:**
+We create another Droplet on DigitalOcean with Ubuntu 22.04 for hosting TheHive:
 
 ![Create TheHive Droplet](https://github.com/uruc/SOC-Automation-Lab/blob/main/images/Pasted%20image%2020240603230036.png)
 
-Also, enable the firewall that we set up for TheHive.
+Also, enable the firewall that we set up earlier for the TheHive Droplet.
 
-Now we are going to install some dependencies:
+**3.3.2 Install Dependencies:**
+We start by installing the necessary dependencies for TheHive:
 ```
 apt install wget gnupg apt-transport-https git ca-certificates ca-certificates-java curl software-properties-common python3-pip lsb-release
 ```
 
 ![Install Dependencies](https://github.com/uruc/SOC-Automation-Lab/blob/main/images/Pasted%20image%2020240603230509.png)
 
-Next, we start installing Java, Cassandra, Elasticsearch, and TheHive itself.
-
-**Install Java:**
+**3.3.3 Install Java:**
 ```
 wget -qO- https://apt.corretto.aws/corretto.key | sudo gpg --dearmor -o /usr/share/keyrings/corretto.gpg
 echo "deb [signed-by=/usr/share/keyrings/corretto.gpg] https://apt.corretto.aws stable main" | sudo tee -a /etc/apt/sources.list.d/corretto.sources.list
@@ -175,7 +182,8 @@ echo JAVA_HOME="/usr/lib/jvm/java-11-amazon-corretto" | sudo tee -a /etc/environ
 export JAVA_HOME="/usr/lib/jvm/java-11-amazon-corretto"
 ```
 
-**Install Cassandra:**
+**3.3.4 Install Cassandra:**
+Cassandra is the database used by TheHive for storing data.
 ```
 wget -qO - https://downloads.apache.org/cassandra/KEYS | sudo gpg --dearmor -o /usr/share/keyrings/cassandra-archive.gpg
 echo "deb [signed-by=/usr/share/keyrings/cassandra-archive.gpg] https://debian.cassandra.apache.org 40x main" | sudo tee -a /etc/apt/sources.list.d/cassandra.sources.list
@@ -183,7 +191,8 @@ sudo apt update
 sudo apt install cassandra
 ```
 
-**Install Elasticsearch:**
+**3.3.5 Install Elasticsearch:**
+Elasticsearch is used by TheHive for indexing and searching data.
 ```
 wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch | sudo gpg --dearmor -o /usr/share/keyrings/elasticsearch-keyring.gpg
 sudo apt-get install apt-transport-https
@@ -192,15 +201,15 @@ sudo apt update
 sudo apt install elasticsearch
 ```
 
-**Optional Elasticsearch Configuration:**
-Create a `jvm.options` file under `/etc/elasticsearch/jvm.options.d` and put the following configurations in that file:
+**3.3.6 Optional Elasticsearch Configuration:**
+Create a `jvm.options` file under `/etc/elasticsearch/jvm.options.d` and add the following configurations to optimize Elasticsearch performance:
 ```
 -Dlog4j2.formatMsgNoLookups=true
 -Xms2g
 -Xmx2g
 ```
 
-**Install TheHive:**
+**3.3.7 Install TheHive:**
 ```
 wget -O- https://archives.strangebee.com/keys/strangebee.gpg | sudo gpg --dearmor -o /usr/share/keyrings/strangebee-archive-keyring.gpg
 echo 'deb [signed-by=/usr/share/keyrings/strangebee-archive-keyring.gpg] https://deb.strangebee.com thehive-5.2 main' | sudo tee -a /etc/apt/sources.list.d/strangebee.list
@@ -208,39 +217,40 @@ sudo apt-get update
 sudo apt-get install -y thehive
 ```
 
-Default Credentials on port 9000:
+Default credentials for accessing TheHive on port 9000:
 ```
-credentials are 'admin@thehive.local' with a password of 'secret'
+Username: admin@thehive.local
+Password: secret
 ```
 
 ![TheHive Login](https://github.com/uruc/SOC-Automation-Lab/blob/main/images/Pasted%20image%2020240603231319.png)
 
-After finishing all the installations, the next step is to configure everything.
-First, we will configure TheHive and the Wazuh server, and our Windows 10 client will be reporting to Wazuh.
+### 3.4 Step 4: Configure TheHive and Wazuh
 
-First, we will start with TheHive's Cassandra, which is TheHive's database.
+**3.4.1 Configure Cassandra:**
+Cassandra is TheHive's database. We need to configure it by modifying the `cassandra.yaml` file:
 ```
 nano /etc/cassandra/cassandra.yaml
 ```
-This is where we customize our listen address or ports, along with the cluster names.
+This is where we customize the listen address, ports, and cluster name.
 
 ![Cassandra Configuration](https://github.com/uruc/SOC-Automation-Lab/blob/main/images/Pasted%20image%2020240603231723.png)
 
-Here, we want to set the `listen_address` to our TheHive's public IP:
+Set the `listen_address` to TheHive's public IP:
 
 ![Listen Address](https://github.com/uruc/SOC-Automation-Lab/blob/main/images/Pasted%20image%2020240603232121.png)
 
-Next is the RPC address. We do the same, entering our TheHive's public IP address.
-Lastly, we will be changing the seed address. Look for the `seed_provider`.
-We do the same and enter the public IP of TheHive in the `seeds`:
+Next, configure the RPC address by entering TheHive's public IP.
+
+Lastly, change the seed address under the `seed_provider` section. Enter TheHive's public IP in the `seeds` field:
 
 ![Seed Provider](https://github.com/uruc/SOC-Automation-Lab/blob/main/images/Pasted%20image%2020240603232508.png)
 
-The next step is to stop our Cassandra service:
+Stop the Cassandra service:
 ```
 systemctl stop cassandra.service
 ```
-And because we installed TheHive using the package, we must remove the old files:
+Remove the old Cassandra data files since we installed TheHive using the package:
 ```
 rm -rf /var/lib/cassandra/*
 ```
