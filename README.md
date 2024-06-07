@@ -74,8 +74,9 @@ The SOC Automation Project aims to create an automated Security Operations Cente
 
 **Since Sysmon is not installed, proceed with the installation using the command:**
 
-
+```
 .\Sysmon64.exe -i .\sysmonconfig.xml
+```
 
    ![Install Sysmon](https://github.com/uruc/SOC-Automation-Lab/blob/main/images/Pasted%20image%2020240603154817.png)
 
@@ -134,7 +135,7 @@ The installation will start:
 We take down the password that is generated:
 ```
 User: admin
-Password: GL4vOhq?WjfzqVZB*nc22C9aJ2OGLSKM
+Password: *******************
 ```
 
 To log in to Wazuh, we go to our Wazuh server's public IP in a browser with `https://` in front:
